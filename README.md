@@ -26,10 +26,10 @@ Download ``SDL2-devel-2.24.0-mingw.zip`` from [here](https://github.com/libsdl-o
 Extract the contents and move the ``include`` folder and the ``lib``  folder to the repository directory.
 
 Download ``SDL2_image.dll`` from [here](https://github.com/libsdl-org/SDL_image/releases)
-and move it the repository directory.
+and move it to the repository directory.
 
 Open command line in the repository directory and run:
-``compile.sh``
+``compile.bat``
 
 This will generate ``perlin.exe``
 
