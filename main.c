@@ -32,8 +32,13 @@ SDL_Texture *noiseTexture;
 
 //draw grid overlay
 int drawGrid = 0;
+int fractal = 0;
+
+//fractal frequency
+float frequency = 0.5;
 
 void toggleGrid(SDL_Renderer *rend);
+void toggleFrac(SDL_Renderer *rend);
 void decreaseGrid(SDL_Renderer *rend);
 void increaseGrid(SDL_Renderer *rend);
 void generateNoiseTexture(SDL_Renderer *rend, SDL_Texture *t);
@@ -73,7 +78,7 @@ int MAIN(int argc, char *argv[]){
 	noisePos.y = screenheight / 2.75 - noisePos.h / 2;
 
 	//read background texture from array
-	SDL_RWops *ops = SDL_RWFromMem((void*)gb,62610);
+	SDL_RWops *ops = SDL_RWFromMem((void*)gb,119788);
 	SDL_Surface *surf = IMG_Load_RW(ops,0);
 	SDL_RWclose(ops);
 	background = SDL_CreateTextureFromSurface(rend,surf);
@@ -81,7 +86,8 @@ int MAIN(int argc, char *argv[]){
 	noiseTexture = SDL_CreateTexture(rend,SDL_PIXELFORMAT_RGB888,SDL_TEXTUREACCESS_TARGET,SCREENWIDTH,SCREENHEIGHT);
 
 	///inizialize buttons
-	Button *gridBut = createButton(rend,gridb,gridbb,10785,9737,(SDL_Rect){screenwidth/2 - (160*winScale)/2,screenheight/4*3,160*winScale,60*winScale},toggleGrid);
+	Button *gridBut = createButton(rend,gridb,gridbb,10785,9737,(SDL_Rect){screenwidth/8*2 + 55*winScale - (160*winScale)/2,screenheight/4*3,160*winScale,60*winScale},toggleGrid);
+	Button *fracBut = createButton(rend,fracb,fracbb,11195,10062,(SDL_Rect){screenwidth/4*3 - 55 *winScale - (160*winScale)/2,screenheight/4*3,160*winScale,60*winScale},toggleFrac);
 	Button *plusBut = createButton(rend,plusb,plusbb,7064,6573,(SDL_Rect){screenwidth/2 - (55*winScale)/2 - winScale * 30   ,screenheight/8*7,55*winScale,55*winScale},increaseGrid);
 	Button *minusBut = createButton(rend,minusb,minusbb,6356,6054,(SDL_Rect){screenwidth/2 - (55*winScale)/2 + winScale * 30  ,screenheight/8*7,55*winScale,55*winScale},decreaseGrid);
 
@@ -121,6 +127,7 @@ int MAIN(int argc, char *argv[]){
 
 
 		drawButton(rend,gridBut);
+		drawButton(rend,fracBut);
 		drawButton(rend,plusBut);
 		drawButton(rend,minusBut);
 
@@ -133,7 +140,13 @@ int MAIN(int argc, char *argv[]){
 					close = 1;
 				break;
 				case SDL_KEYDOWN:
-
+					if(event.key.keysym.scancode == SDL_SCANCODE_UP && frequency < 1){
+						frequency += 0.1;
+						generateNoiseTexture(rend,noiseTexture);
+					}else if(event.key.keysym.scancode == SDL_SCANCODE_DOWN && frequency > 0.1){
+						frequency -= 0.1;
+						generateNoiseTexture(rend,noiseTexture);
+					}
 
 				break;
 				case SDL_MOUSEBUTTONDOWN:
@@ -152,6 +165,10 @@ int MAIN(int argc, char *argv[]){
 					if(hoveringCheckButton(minusBut,x,y)){
 						minusBut->clicked = 3;
 						minusBut->pressd(rend);
+					}
+					if(hoveringCheckButton(fracBut,x,y)){
+						fracBut->clicked = 3;
+						fracBut->pressd(rend);
 					}
 
 				break;
@@ -182,18 +199,27 @@ void generateNoiseTexture(SDL_Renderer *rend, SDL_Texture *t){
 		return;
 
 	//generate random vectors
-	generatePerlinVectors(gridX,gridY,SCREENWIDTH,SCREENHEIGHT);
+	generatePerlinVectors(gridX,gridY);
 
 	SDL_SetRenderTarget(rend,t); //draw to texture from now on
 
 	SDL_RenderClear(rend);
 
+	getPointHeight(5,5);
+
 	float height;
-	for(int x = 0; x < SCREENWIDTH; x++){
+	for(float x = 0; x < SCREENWIDTH; x++){
 
-		for(int y = 0; y < SCREENHEIGHT; y++){
+		for(float y = 0; y < SCREENHEIGHT; y++){
 
-			height = getPointHeight(x,y); //get height of that point
+			//normalize X and Y to a maximum of GridX and GridY
+			float nx = x * gridX / SCREENWIDTH;
+			float ny = y * gridY / SCREENHEIGHT;
+
+			if(fractal)
+				height = getFractalPointHeight(nx,ny,4,1,frequency) - 1;
+			else
+				height = getPointHeight(nx,ny); //get height of that point
 
 			if(height < -1)
 				height = -0.99;
@@ -219,25 +245,47 @@ void generateNoiseTexture(SDL_Renderer *rend, SDL_Texture *t){
 
 
 void toggleGrid(SDL_Renderer *rend){
-
+	if(!fractal)
 	drawGrid = !drawGrid;
+}
+
+void increaseGrid(SDL_Renderer *rend){
+
+	//if we are viewing the regular perlin noise
+	//we increate the noise grid, otherwise we increase the
+	//fractal frequency
+
+	if(fractal){
+		if(frequency < 1)
+			frequency+=0.1f;
+
+	}else
+	if(gridX < 50){
+		gridX+=1;
+		gridY+=1;
+	}
+
+	generateNoiseTexture(rend,noiseTexture);
 }
 
 void decreaseGrid(SDL_Renderer *rend){
 
-	if(gridX > 2){
+	if(fractal){
+		if(frequency > 0.1)
+			frequency-=0.1;
+
+	}else
+	if(gridX > 1){
 		gridX-=1;
 		gridY-=1;
 	}
 
 	generateNoiseTexture(rend,noiseTexture);
 }
-void increaseGrid(SDL_Renderer *rend){
 
-	if(gridX < 20){
-		gridX+=1;
-		gridY+=1;
-	}
 
+void toggleFrac(SDL_Renderer *rend){
+	fractal = !fractal;
 	generateNoiseTexture(rend,noiseTexture);
+	drawGrid = 0;
 }
