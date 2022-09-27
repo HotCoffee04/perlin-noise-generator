@@ -133,11 +133,15 @@ float interpolate(float t, float a, float b)
 	// linear interpolation:
 	//return a + t*( b - a );
 
+	//cosine interpolation
+	float t2 = (1 - cos(t*3.1415926)) /2;
+	return (a*(1-t2)+b*t2);
+
 	// smooth interpolation
 	//return (b - a) * (3.0 - t * 2.0) * t * t + a; 
 
 	//even smoother interpolation
-	return (b - a) * ((t * (t * 6.0 - 15.0) + 10.0) * t * t * t) + a; 
+	//return (b - a) * ((t * (t * 6.0 - 15.0) + 10.0) * t * t * t) + a; 
 }
 
 void normalizeVec( Vec* p ,int max)
