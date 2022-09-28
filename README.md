@@ -15,7 +15,7 @@ You need ``libsdl2-dev`` and ``libsdl2_image-dev`` installed on your system.
 Enter the repository directory and type 
 
 ```
-chmod +x ./compile.sh
+chmod +x compile.sh
 ./compile.sh
 ```
 the executable named ``perlin`` will be generated.
