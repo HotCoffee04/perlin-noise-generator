@@ -29,7 +29,7 @@ Extract the contents and move the ``include`` folder and the ``lib``  folder to 
 move from the bin folder ``SDL2.dll`` to the repository directory.
 
 Download ``SDL2_image-devel-2.6.2-mingw.zip`` from [here](https://github.com/libsdl-org/SDL_image/releases)
-And do the exact same you did for the other SDL zip:
+ad do the exact same you did for the other SDL zip:
 Move the ``include`` and ``lib`` folders and the ``SDL2_image.dll`` file to the repository directory.
 
 Once everything is there open command prompt in the repository directory and run:
