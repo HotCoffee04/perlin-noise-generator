@@ -50,6 +50,20 @@ void generatePerlinVectors(int cellsxn,int cellsyn){
 			grid[x][y].y = (float)sqrt((float)1 - pow(grid[x][y].x,2)) * neg;
 		}
 
+
+	//after we generated the vectors I need to make them identical on the corners of the grid.
+	//In this way the noise will be seamless.
+	//This is necessary to make fractal noise
+	for(int y = 0; y < nodesyn; y++){
+		grid[nodesyn - 1][y] = grid[0][y];
+	}
+	for(int x = 0; x < nodesxn - 1; x++){
+		grid[x][nodesxn - 1] = grid[x][0];
+
+	}
+	
+	grid[nodesxn - 1][nodesyn - 1] = grid[0][nodesyn - 1] = grid[nodesxn - 1][0] = grid[0][0];
+
 }
 
 float getPointHeight(float x,float y){
@@ -127,12 +141,7 @@ float getFractalPointHeight(float x,float y,int octaves,float amplitude,float fr
 		float sx = x * frequency;
 		float sy = y * frequency;
 
-		while(sx < 0){
-			sx = sx + (nodesxn - 1);
-		}
-		while(sy < 0){
-			sy = sy + (nodesyn - 1);
-		}
+
 		while(sx > nodesxn - 1){
 			sx = sx - (nodesxn - 1);
 		}

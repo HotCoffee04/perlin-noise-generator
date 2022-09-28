@@ -32,6 +32,8 @@ SDL_Texture *noiseTexture;
 
 //draw grid overlay
 int drawGrid = 0;
+
+//draw fractal noise
 int fractal = 0;
 
 //fractal frequency
