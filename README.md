@@ -24,7 +24,7 @@ the executable named ``perlin`` will be generated.
 ## On Windows
 
 To compile you need to have installed [MinGW-32](https://sourceforge.net/projects/mingw/) and the SDL2 development libraries.
-The repository contains ``SetupSDL.bat``, a script that will automatically dowload and install the libraries (Needs to be run as administrator).
+The repository contains ``SetupSDL.bat``, a script that will automatically download and install the libraries (Needs to be run as administrator).
 The script will create the directory ``C:\SDL2-2.26.4-mingw``.
 
 Copy ``C:\SDL2-2.26.4-mingw\i686-w64-mingw32\bin\SDL2.dll`` and ``C:\SDL2-2.26.4-mingw\i686-w64-mingw32\bin\SDL2_image.dll`` to the code directory.
