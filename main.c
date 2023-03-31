@@ -5,6 +5,7 @@
 	applying the theory without using pre-made functions.
 
 */
+#define SDL_MAIN_HANDLED 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <stdio.h>
@@ -13,11 +14,6 @@
 #include "button.h"
 #include "perlin.h"
 
-#ifdef _WIN32
-#define MAIN WinMain
-#else
-#define MAIN main
-#endif
 
 //original noise size
 #define SCREENWIDTH 600
@@ -45,7 +41,7 @@ void decreaseGrid(SDL_Renderer *rend);
 void increaseGrid(SDL_Renderer *rend);
 void generateNoiseTexture(SDL_Renderer *rend, SDL_Texture *t);
 
-int MAIN(int argc, char *argv[]){
+int main(int argc, char *argv[]){
 	
 	//default size
 	gridX = gridY = 10;

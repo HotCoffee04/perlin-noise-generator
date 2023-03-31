@@ -1,1 +1,1 @@
-mingw32-gcc main.c perlin.c button.c -I"include" -L"lib" -Wall -lmingw32 -lSDL2_image -lSDL2 -lm -mwindows -o perlin.exe
+C:\MinGW\bin\gcc main.c perlin.c button.c -I"C:\SDL2-2.26.4-mingw\i686-w64-mingw32\include" -L"C:\SDL2-2.26.4-mingw\i686-w64-mingw32\lib" -lSDL2 -lSDL2_image -lm -mwindows -o perlin.exe
